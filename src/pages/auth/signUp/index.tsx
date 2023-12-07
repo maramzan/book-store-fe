@@ -26,7 +26,6 @@ const SignUp: React.FC = () => {
         .required("Required"),
     }),
     onSubmit: (values) => {
-      console.log("register Values");
       registerUser({
         email: values.email,
         password: values.password,
@@ -53,12 +52,11 @@ const SignUp: React.FC = () => {
         body: JSON.stringify(values),
       });
       const data = await response.json();
-      console.log("data", data);
       if (data.token) {
         navigate("/signin");
       }
     } catch (error) {
-      console.log("error", error);
+      alert(error);
     } finally {
       setLoading(false);
       formik.resetForm();

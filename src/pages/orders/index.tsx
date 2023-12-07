@@ -18,7 +18,6 @@ const Orders: React.FC = () => {
       const response = await axios.get(
         `http://localhost:3000/orders/user/${userId}`
       );
-      console.log(response.data);
 
       setOrderedBooks((prev) => [...response.data]);
     } catch (error) {
@@ -29,7 +28,6 @@ const Orders: React.FC = () => {
   const cancelOrder = async (orderId: number) => {
     try {
       const userId = localStorage.getItem("userId");
-      console.log({ userId, orderId });
       const response = await axios.post(
         `http://localhost:3000/orders/cancel/${orderId}`,
         { userId }
@@ -39,7 +37,6 @@ const Orders: React.FC = () => {
         toast("Order cancelled successfully");
         setRefresh((prev) => !prev);
       }
-      console.log(response);
     } catch (error) {
       alert(error);
     }

@@ -17,7 +17,6 @@ const SignIn: React.FC = () => {
       password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
-      console.log("clicked");
       signInUser(values);
     },
   });
@@ -29,7 +28,6 @@ const SignIn: React.FC = () => {
         `http://localhost:3000/auth/login`,
         values
       );
-      console.log("response", response);
       if (response.status === 200) {
         await localStorage.setItem("token", response.data.token);
         await localStorage.setItem("userId", response.data.user.id);
