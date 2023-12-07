@@ -18,8 +18,8 @@ export const useBook = () => {
       const response = await axios.get(
         `http://localhost:3000/books?page=${page}`
       );
-      setBookData((prev) => [...prev, ...response.data]);
-      15 > page ? setHasMore(true) : setHasMore(false);
+      setBookData((prev) => [...prev, ...response.data.books]);
+      response.data.totalPages > page ? setHasMore(true) : setHasMore(false);
       setPage((prev) => prev + 1);
     } catch (error) {
       alert(error);
