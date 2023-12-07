@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 interface BookCardProps {
   title: string;
@@ -14,6 +15,7 @@ interface BookCardProps {
     price: number;
     tags: string[];
   }) => void;
+  status?: string;
 }
 
 const BookCard: React.FC<BookCardProps> = ({
@@ -24,14 +26,19 @@ const BookCard: React.FC<BookCardProps> = ({
   tags,
   openModal,
   setSelectedBook,
+  status,
 }) => {
   const handleClick = () => {
+    if (status === "CANCELLED") {
+      toast("Order is already cancelled");
+      return;
+    }
     setSelectedBook({ title, writer, imageUrl, price, tags });
     openModal();
   };
   return (
     <div
-      className=" mx-auto rounded mt-4 overflow-hidden shadow-lg"
+      className=" mx-auto cursor-pointer rounded mt-4 overflow-hidden shadow-lg"
       onClick={handleClick}
     >
       <img className="w-full" src={imageUrl} alt={title} />
@@ -39,6 +46,9 @@ const BookCard: React.FC<BookCardProps> = ({
         <div className="font-bold text-xl mb-2">{title}</div>
         <p className="text-gray-700 text-base mb-2">Writer: {writer}</p>
         <p className="text-gray-700 text-base mb-2">Price: ${price}</p>
+        {status && (
+          <p className="text-gray-700 font-semibold text-base mb-2">{status}</p>
+        )}
 
         <div className="flex flex-wrap">
           {tags.map((tag, index) => (

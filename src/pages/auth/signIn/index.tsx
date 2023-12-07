@@ -35,7 +35,6 @@ const SignIn: React.FC = () => {
         await localStorage.setItem("userId", response.data.user.id);
         navigate("/");
       }
-      // navigate("/orders");
     } catch (error) {
       alert("Invalid email or password");
     } finally {

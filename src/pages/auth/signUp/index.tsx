@@ -55,9 +55,7 @@ const SignUp: React.FC = () => {
       const data = await response.json();
       console.log("data", data);
       if (data.token) {
-        await localStorage.setItem("token", data.token);
-        await localStorage.setItem("userId", data.user.id);
-        navigate("/");
+        navigate("/signin");
       }
     } catch (error) {
       console.log("error", error);

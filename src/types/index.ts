@@ -14,10 +14,13 @@ export interface Post {
   };
 }
 export interface Book {
-  id: string;
+  id: number;
   title: string;
   writer: string;
-  imageUrl: string;
-  price: number;
+  coverImage: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
   tags: string[];
+  point: number;
 }

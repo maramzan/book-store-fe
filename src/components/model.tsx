@@ -1,26 +1,16 @@
-import React from "react";
-
 interface ModalProps {
   closeModal: () => void;
-  selectedBook: {
-    title: string;
-    writer: string;
-    imageUrl: string;
-    price: number;
-    tags: string[];
-  } | null;
-  setOrders?: any;
+  selectedBook: string;
+  modalAction?: () => void;
+  cancel?: boolean;
 }
 
 export default function Modal({
   closeModal,
   selectedBook,
-  setOrders,
+  modalAction,
+  cancel,
 }: ModalProps) {
-  const handleOrder = () => {
-    setOrders((prev: any) => [...prev, selectedBook]);
-    closeModal();
-  };
   return (
     <>
       <div className="p-4 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-modal-overlay">
@@ -31,7 +21,7 @@ export default function Modal({
           <div>
             <h1 className=" text-center  text-[18px]">
               Do you want to order{" "}
-              <span className="font-semibold">{selectedBook?.title}</span>
+              <span className="font-semibold">{selectedBook}</span>
             </h1>
             <div className="flex flex-row justify-center mt-10">
               <button
@@ -42,9 +32,9 @@ export default function Modal({
               </button>
               <button
                 className=" bg-blue-500  text-white ml-4 flex px-6 py-3 rounded-md"
-                onClick={handleOrder}
+                onClick={modalAction}
               >
-                Order
+                {cancel ? "Cancel Order" : "Order"}
               </button>
             </div>
           </div>
