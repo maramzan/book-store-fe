@@ -9,6 +9,8 @@ export const useBook = () => {
   const [keyword, setKeyword] = useState<string>("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
   const config = {
     headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
   };
@@ -40,5 +42,9 @@ export const useBook = () => {
     keyword,
     setKeyword,
     setBookData,
+    isModalOpen,
+    setIsModalOpen,
+    selectedBook,
+    setSelectedBook,
   };
 };

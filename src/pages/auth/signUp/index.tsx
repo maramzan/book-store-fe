@@ -1,20 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const SignUp: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      fullName: Yup.string().required("Required"),
+      firstName: Yup.string().required("Required"),
+      lastName: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string().required("Required"),
       confirmPassword: Yup.string()
@@ -23,9 +26,46 @@ const SignUp: React.FC = () => {
         .required("Required"),
     }),
     onSubmit: (values) => {
-      navigate("/sign-in");
+      console.log("register Values");
+      registerUser({
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName,
+      });
     },
   });
+
+  const registerUser = async (values: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }) => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+      console.log("data", data);
+      if (data.token) {
+        await localStorage.setItem("token", data.token);
+        await localStorage.setItem("userId", data.user.id);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setLoading(false);
+      formik.resetForm();
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -36,26 +76,49 @@ const SignUp: React.FC = () => {
         <h2 className="text-2xl font-semibold mb-6">Sign Up</h2>
         <div className="mb-4">
           <label
-            htmlFor="fullName"
+            htmlFor="firstName"
             className="block text-sm font-medium text-gray-600"
           >
-            Full Name
+            First Name
           </label>
           <input
             type="text"
-            id="fullName"
-            name="fullName"
+            id="firstName"
+            name="firstName"
             className="mt-1 p-2 w-full border border-gray-300 rounded-md"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.fullName}
+            value={formik.values.firstName}
           />
-          {formik.touched.fullName && formik.errors.fullName && (
+          {formik.touched.firstName && formik.errors.firstName && (
             <div className="text-red-500 text-sm mt-1">
-              {formik.errors.fullName}
+              {formik.errors.firstName}
             </div>
           )}
         </div>
+        <div className="mb-4">
+          <label
+            htmlFor="lastName"
+            className="block text-sm font-medium text-gray-600"
+          >
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.lastName}
+          />
+          {formik.touched.lastName && formik.errors.lastName && (
+            <div className="text-red-500 text-sm mt-1">
+              {formik.errors.lastName}
+            </div>
+          )}
+        </div>
+
         <div className="mb-4">
           <label
             htmlFor="email"

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
+  const [Loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -15,9 +17,31 @@ const SignIn: React.FC = () => {
       password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
-      navigate("/");
+      console.log("clicked");
+      signInUser(values);
     },
   });
+
+  const signInUser = async (values: { email: string; password: string }) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `http://localhost:3000/auth/login`,
+        values
+      );
+      console.log("response", response);
+      if (response.status === 200) {
+        await localStorage.setItem("token", response.data.token);
+        await localStorage.setItem("userId", response.data.user.id);
+        navigate("/");
+      }
+      // navigate("/orders");
+    } catch (error) {
+      alert("Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -73,7 +97,7 @@ const SignIn: React.FC = () => {
         <button
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-          disabled={!formik.isValid || formik.isSubmitting}
+          disabled={Loading}
         >
           Sign In
         </button>
